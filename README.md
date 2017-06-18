@@ -1,8 +1,8 @@
-#功能
+## 功能
 
 扫描二维码,连接WebSocket服务器模拟登陆
 
-#参考项目
+## 参考项目
 
 WebSocket支持库 : https://github.com/crossbario/autobahn-java
 

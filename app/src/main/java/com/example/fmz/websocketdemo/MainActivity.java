@@ -5,17 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-//import org.java_websocket.client.WebSocketClient;
-//import org.java_websocket.drafts.Draft_6455;
-//import org.java_websocket.handshake.ServerHandshake;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import io.crossbar.autobahn.WebSocketConnection;
 import io.crossbar.autobahn.WebSocketConnectionHandler;
@@ -34,12 +26,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
         initView();
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(MainActivity.this, ScanActivity.class), 101);
-            }
-        });
+        login.setOnClickListener(
+                view -> startActivityForResult(new Intent(MainActivity.this, ScanActivity.class), 101)
+        );
     }
 
     private void initView() {
@@ -61,15 +50,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void send(String sessionID) {
         if (mConnection.isConnected()) {
-            mConnection.sendTextMessage("login-"+sessionID);
-        }else {
+            mConnection.sendTextMessage("login-" + sessionID);
+        } else {
             start(sessionID);
         }
     }
 
     private void start(final String sessionID) {
 
-        final String wsuri = "ws://192.168.199.203:8080/fmz/websocket";
+        final String wsuri = "ws://191.101.224.56:9090";
+//        final String wsuri = "ws://192.168.199.203:9090";
 
         try {
             mConnection.connect(wsuri, new WebSocketConnectionHandler() {
@@ -77,13 +67,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onOpen() {
                     Log.d(TAG, "Status: Connected to " + wsuri);
-                    mConnection.sendTextMessage("login-"+sessionID);
+                    mConnection.sendTextMessage("login-" + sessionID);
                 }
 
                 @Override
                 public void onTextMessage(String payload) {
                     Log.d(TAG, "Got echo: " + payload);
-                    Toast.makeText(MainActivity.this, payload, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, payload, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -91,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "Connection lost.");
                 }
             });
-        }  catch (WebSocketException e) {
+        } catch (WebSocketException e) {
             e.printStackTrace();
         }
     }
